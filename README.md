@@ -5,7 +5,7 @@ Install a released [SpecScore CLI](https://github.com/specscore/specscore-cli) b
 ```yaml
 steps:
   - uses: actions/checkout@v4
-  - uses: specscore/setup-specscore@d365e1a74c5916c42f00fc3f597176dad865a78c # v1
+  - uses: specscore/setup-specscore@d365e1a74c5916c42f00fc3f597176dad865a78c
     with:
       version: v0.55.0
   - run: specscore spec lint
@@ -13,4 +13,4 @@ steps:
 
 `version` is required and must be an exact release tag. The `version` output contains that tag. Linux and macOS support amd64 and arm64; Windows supports amd64. Unsupported platforms fail explicitly.
 
-The vendored installers are based on specscore-cli commit `3f47e688085ed6afdb358cd93668cb33cd1fea15`; their only action-specific change checks the optional independent digest. The downloaded archive is verified against the release checksum manifest before extraction. A manifest from the same release detects corruption but cannot protect against replacement of both the archive and manifest. To verify against an independently obtained archive digest, pass `expected-sha256` for the specific OS and architecture; a mismatch fails the step.
+The vendored installers are based on specscore-cli commit `3f47e688085ed6afdb358cd93668cb33cd1fea15`; action-specific changes add the optional independent digest and disable interactive PATH shadow remediation. The downloaded archive is verified against the release checksum manifest before extraction. A manifest from the same release detects corruption but cannot protect against replacement of both the archive and manifest. To verify against an independently obtained archive digest, pass `expected-sha256` for the specific OS and architecture; a mismatch fails the step.

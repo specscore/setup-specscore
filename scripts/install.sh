@@ -167,7 +167,7 @@ esac
 # If another ${BIN_NAME} appears earlier on PATH (commonly a stale
 # `go install` build in $GOPATH/bin), it shadows the binary we just
 # installed. Rename it to .backup so the released version takes effect.
-if [ "$IN_PATH" = "1" ]; then
+if [ "$IN_PATH" = "1" ] && [ "${SPECSCORE_SKIP_SHADOW:-}" != "1" ]; then
   SHADOW="$(command -v "$BIN_NAME" 2>/dev/null || true)"
   if [ -n "$SHADOW" ] && [ "$SHADOW" != "$DST" ]; then
     BACKUP="${SHADOW}.backup"

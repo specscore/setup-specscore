@@ -26,7 +26,13 @@ chmod +x "$tmp/bin/uname" "$tmp/bin/curl"
 export FIXTURE="$tmp" SPECSCORE_VERSION=v1.2.3 SPECSCORE_INSTALL_DIR="$tmp/out" PATH="$tmp/bin:$PATH"
 sh "$root/scripts/install.sh" > /dev/null
 [ -f "$tmp/out/specscore" ]
+printf '#!/bin/sh\nexit 0\n' > "$tmp/bin/specscore"
+chmod +x "$tmp/bin/specscore"
+PATH="$tmp/bin:$tmp/out:$PATH" SPECSCORE_SKIP_SHADOW=1 sh "$root/scripts/install.sh" > /dev/null
+[ -f "$tmp/bin/specscore" ] && [ ! -e "$tmp/bin/specscore.backup" ] || { echo 'shadowed binary changed' >&2; exit 1; }
 rm "$tmp/out/specscore"
+if SPECSCORE_EXPECTED_SHA256=0000000000000000000000000000000000000000000000000000000000000000 sh "$root/scripts/install.sh" > "$tmp/error.log" 2>&1; then echo 'independent digest mismatch accepted' >&2; exit 1; fi
+grep -q 'expected-sha256 mismatch' "$tmp/error.log"
 if MISSING_MANIFEST=1 sh "$root/scripts/install.sh" > /dev/null 2>&1; then echo 'missing manifest accepted' >&2; exit 1; fi
 printf '%064d  specscore_1.2.3_linux_amd64.tar.gz\n' 0 > "$tmp/checksums.txt"
 if sh "$root/scripts/install.sh" > "$tmp/error.log" 2>&1; then echo 'checksum mismatch accepted' >&2; exit 1; fi

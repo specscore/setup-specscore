@@ -22,6 +22,7 @@ runs:
         SPECSCORE_EXPECTED_SHA256: ${{ inputs.expected-sha256 }}
         SPECSCORE_INSTALL_DIR: ${{ runner.temp }}/specscore-bin
         ACTION_PATH: ${{ github.action_path }}
+        SPECSCORE_SKIP_SHADOW: '1'
       run: |
         [[ "$SPECSCORE_VERSION" =~ ^v[0-9]+\.[0-9]+\.[0-9]+(-[0-9A-Za-z.-]+)?$ ]] || { echo 'version must be an exact release tag' >&2; exit 1; }
         sh "$ACTION_PATH/scripts/install.sh"

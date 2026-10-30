@@ -16,6 +16,7 @@ if ($Child) {
     $env:PROCESSOR_ARCHITECTURE = 'AMD64'
     $env:SPECSCORE_VERSION = 'v1.2.3'
     $env:SPECSCORE_SKIP_USER_PATH = '1'
+    if ($Mode -eq 'independent') { $env:SPECSCORE_EXPECTED_SHA256 = '0' * 64 }
     $env:SPECSCORE_INSTALL_DIR = Join-Path $Fixture 'bin'
     . (Join-Path $PSScriptRoot 'install.ps1')
     exit 0
@@ -30,6 +31,10 @@ try {
     & pwsh -NoProfile -File $PSCommandPath -Child -Mode success -Fixture $tmp
     if ($LASTEXITCODE -ne 0 -or -not (Test-Path (Join-Path $tmp 'bin/specscore.exe'))) { throw 'valid install failed' }
     Remove-Item (Join-Path $tmp 'bin/specscore.exe')
+    $independentLog = Join-Path $tmp 'independent.log'
+    & pwsh -NoProfile -File $PSCommandPath -Child -Mode independent -Fixture $tmp *> $independentLog
+    if ($LASTEXITCODE -eq 0 -or (Test-Path (Join-Path $tmp 'bin/specscore.exe'))) { throw 'independent digest mismatch accepted' }
+    if ((Get-Content -Raw $independentLog) -notmatch 'expected-sha256 mismatch') { throw 'unexpected independent digest failure' }
     & pwsh -NoProfile -File $PSCommandPath -Child -Mode missing -Fixture $tmp
     if ($LASTEXITCODE -eq 0) { throw 'missing manifest accepted' }
     Set-Content (Join-Path $tmp 'checksums.txt') (('0' * 64) + '  specscore_1.2.3_windows_amd64.zip')
