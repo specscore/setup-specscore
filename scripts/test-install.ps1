@@ -33,8 +33,10 @@ try {
     & pwsh -NoProfile -File $PSCommandPath -Child -Mode missing -Fixture $tmp
     if ($LASTEXITCODE -eq 0) { throw 'missing manifest accepted' }
     Set-Content (Join-Path $tmp 'checksums.txt') (('0' * 64) + '  specscore_1.2.3_windows_amd64.zip')
-    & pwsh -NoProfile -File $PSCommandPath -Child -Mode mismatch -Fixture $tmp
+    $mismatchLog = Join-Path $tmp 'mismatch.log'
+    & pwsh -NoProfile -File $PSCommandPath -Child -Mode mismatch -Fixture $tmp *> $mismatchLog
     if ($LASTEXITCODE -eq 0 -or (Test-Path (Join-Path $tmp 'bin/specscore.exe'))) { throw 'checksum mismatch accepted' }
+    if ((Get-Content -Raw $mismatchLog) -notmatch 'checksum mismatch') { throw 'unexpected mismatch failure' }
     Set-Content (Join-Path $tmp 'checksums.txt') (('0' * 64) + '  other.zip')
     & pwsh -NoProfile -File $PSCommandPath -Child -Mode entry -Fixture $tmp
     if ($LASTEXITCODE -eq 0) { throw 'missing entry accepted' }
