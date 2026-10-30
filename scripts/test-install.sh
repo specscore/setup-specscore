@@ -1,4 +1,7 @@
 #!/bin/sh
+# Derived from specscore/specscore-cli at 3f47e688085ed6afdb358cd93668cb33cd1fea15 (Apache-2.0).
+# Modified for GitHub Actions: optional digest, noninteractive PATH behavior, and action tests.
+# See third_party/specscore-cli/LICENSE and README.md for details.
 set -eu
 root=$(CDPATH= cd -- "$(dirname "$0")/.." && pwd)
 tmp=$(mktemp -d)

@@ -17,4 +17,4 @@ The vendored installers are based on specscore-cli commit `3f47e688085ed6afdb358
 
 ## License
 
-The setup action's original code is licensed under MIT; see [LICENSE](LICENSE). The vendored `scripts/install.sh` and `scripts/install.ps1` originate in the Apache-2.0-licensed SpecScore CLI; see [its license](third_party/specscore-cli/LICENSE). Action-specific modifications are described above.
+The setup action's original code is licensed under MIT; see [LICENSE](LICENSE). The vendored installer and test scripts in `scripts/` originate in the Apache-2.0-licensed SpecScore CLI; see [its license](third_party/specscore-cli/LICENSE). Action-specific modifications are described above.
