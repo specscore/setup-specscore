@@ -1,0 +1,44 @@
+name: Setup SpecScore
+description: Install a released SpecScore CLI binary
+inputs:
+  version:
+    description: Exact SpecScore release tag, for example v0.55.0
+    required: true
+  expected-sha256:
+    description: Optional independently obtained SHA-256 of the selected archive
+    required: false
+outputs:
+  version:
+    description: Installed release tag
+    value: ${{ steps.unix.outputs.version || steps.windows.outputs.version }}
+runs:
+  using: composite
+  steps:
+    - id: unix
+      if: runner.os != 'Windows'
+      shell: bash
+      env:
+        SPECSCORE_VERSION: ${{ inputs.version }}
+        SPECSCORE_EXPECTED_SHA256: ${{ inputs.expected-sha256 }}
+        SPECSCORE_INSTALL_DIR: ${{ runner.temp }}/specscore-bin
+        ACTION_PATH: ${{ github.action_path }}
+        SPECSCORE_SKIP_SHADOW: '1'
+      run: |
+        [[ "$SPECSCORE_VERSION" =~ ^v[0-9]+\.[0-9]+\.[0-9]+(-[0-9A-Za-z.-]+)?$ ]] || { echo 'version must be an exact release tag' >&2; exit 1; }
+        sh "$ACTION_PATH/scripts/install.sh"
+        echo "$SPECSCORE_INSTALL_DIR" >> "$GITHUB_PATH"
+        echo "version=$SPECSCORE_VERSION" >> "$GITHUB_OUTPUT"
+    - id: windows
+      if: runner.os == 'Windows'
+      shell: pwsh
+      env:
+        SPECSCORE_VERSION: ${{ inputs.version }}
+        SPECSCORE_EXPECTED_SHA256: ${{ inputs.expected-sha256 }}
+        SPECSCORE_INSTALL_DIR: ${{ runner.temp }}/specscore-bin
+        SPECSCORE_SKIP_USER_PATH: '1'
+        ACTION_PATH: ${{ github.action_path }}
+      run: |
+        if ($env:SPECSCORE_VERSION -notmatch '^v[0-9]+\.[0-9]+\.[0-9]+(-[0-9A-Za-z.-]+)?$') { throw 'version must be an exact release tag' }
+        & "$env:ACTION_PATH/scripts/install.ps1"
+        Add-Content $env:GITHUB_PATH $env:SPECSCORE_INSTALL_DIR
+        Add-Content $env:GITHUB_OUTPUT "version=$env:SPECSCORE_VERSION"
