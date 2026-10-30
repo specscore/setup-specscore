@@ -22,8 +22,11 @@ jobs:
         shell: pwsh
         run: |
           if ('${{ steps.setup.outputs.version }}' -ne 'v0.55.0') { throw 'incorrect version output' }
-          specscore --version
-          if ($LASTEXITCODE -ne 0) { throw 'CLI failed' }
+          $resolved = (Get-Command specscore).Source
+          $expectedDir = Join-Path $env:RUNNER_TEMP 'specscore-bin'
+          if ((Split-Path $resolved) -ne $expectedDir) { throw "unexpected binary: $resolved" }
+          $reported = & specscore --version
+          if ($LASTEXITCODE -ne 0 -or $reported -notmatch '(^|[^0-9])0\.55\.0([^0-9]|$)') { throw "wrong version: $reported" }
       - id: bad_checksum
         continue-on-error: true
         uses: ./
@@ -35,3 +38,11 @@ jobs:
         env:
           OUTCOME: ${{ steps.bad_checksum.outcome }}
         run: if ($env:OUTCOME -ne 'failure') { throw 'checksum mismatch was accepted' }
+      - name: Test manifest mismatch (Unix)
+        if: runner.os != 'Windows'
+        shell: bash
+        run: ./scripts/test-install.sh
+      - name: Test manifest mismatch (Windows)
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: ./scripts/test-install.ps1
