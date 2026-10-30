@@ -1,0 +1,23 @@
+name: Setup SpecScore
+description: Install a released SpecScore CLI binary
+inputs:
+  version:
+    description: Exact SpecScore release tag, for example v0.55.0
+    required: true
+  expected-sha256:
+    description: Optional independently obtained SHA-256 of the selected archive
+    required: false
+outputs:
+  version:
+    description: Installed release tag
+    value: ${{ steps.install.outputs.version }}
+runs:
+  using: composite
+  steps:
+    - id: install
+      shell: pwsh
+      env:
+        ACTION_PATH: ${{ github.action_path }}
+        SPECSCORE_VERSION: ${{ inputs.version }}
+        SPECSCORE_EXPECTED_SHA256: ${{ inputs.expected-sha256 }}
+      run: '& "$env:ACTION_PATH/install.ps1"'
