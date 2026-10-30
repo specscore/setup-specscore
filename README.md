@@ -1,5 +1,9 @@
 # setup-specscore
 
+[![Watch the SpecScore product video](assets/product-video.webp)](https://youtu.be/dvYYsFzfDlk)
+
+[Watch the SpecScore product video](https://youtu.be/dvYYsFzfDlk)
+
 Install a released [SpecScore CLI](https://github.com/specscore/specscore-cli) binary on a GitHub Actions runner. The action installs only; run checks in a separate step. Go is not required.
 
 ```yaml
