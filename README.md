@@ -5,7 +5,7 @@ Install a released [SpecScore CLI](https://github.com/specscore/specscore-cli) b
 ```yaml
 steps:
   - uses: actions/checkout@v4
-  - uses: specscore/setup-specscore@7a72272020daa8a1df5e2509c1d5b34fa4a9210d
+  - uses: specscore/setup-specscore@b47e10f49d87840cfe109b262f2990adeee87690
     with:
       version: v0.55.0
   - run: specscore spec lint
