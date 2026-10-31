@@ -1,6 +1,6 @@
 # setup-specscore
 
-[![Watch the SpecScore product video](assets/product-video.webp)](https://youtu.be/dvYYsFzfDlk)
+[![Watch the SpecScore product video](assets/product-video-play.svg)](https://youtu.be/dvYYsFzfDlk)
 
 [Watch the SpecScore product video](https://youtu.be/dvYYsFzfDlk)
 
