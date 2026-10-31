@@ -8,7 +8,7 @@ Install a released [SpecScore CLI](https://github.com/specscore/specscore-cli) b
 
 ```yaml
 steps:
-  - uses: actions/checkout@v4
+  - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
   - uses: specscore/setup-specscore@be52848b13610d45a2019c6d23bd7e46b6e23ac1
     with:
       version: v0.55.0
